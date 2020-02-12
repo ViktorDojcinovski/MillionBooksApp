@@ -1,0 +1,6 @@
+{
+  "main": "BookListContainer.tsx",
+  "devDependencies": {
+    "@types/styled-components": "^4.4.3"
+  }
+}
