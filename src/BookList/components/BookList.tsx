@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import { FixedSizeList } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Book from '../../shared/models/Book.model';
 
@@ -8,7 +10,13 @@ type BookListProps = {
   books: Book[];
 };
 
+type BookListItertor = {
+  index: number;
+  style: string;
+};
+
 const StyledList = styled.ul`
+  height: calc(100vh - 110px);
   li {
     list-style: none;
     position: relative;
@@ -30,30 +38,47 @@ const StyledList = styled.ul`
 `;
 
 const BookList = ({ books }: BookListProps) => {
+  const Row = ({ index, style }: { index: any; style: any }) => {
+    return (
+      <div style={style}>
+        <li
+          key={books[index].id}
+          style={{
+            backgroundColor:
+              books[index].genre === 'horror' &&
+              moment(books[index].date).month() === 9 &&
+              moment(books[index].date).date() === 31
+                ? 'red'
+                : 'transparent'
+          }}
+        >
+          <p>Name: {books[index].name}</p>
+          <p>Genre: {books[index].genre}</p>
+          <p>Published: {books[index].date}</p>
+          <div>
+            Author: {books[index].author.firstName}{' '}
+            {books[index].author.lastName}
+          </div>
+        </li>
+      </div>
+    );
+  };
+
   return (
     <>
       <StyledList>
-        {books.map(book => (
-          <li
-            key={book.id}
-            style={{
-              backgroundColor:
-                book.genre === 'horror' &&
-                moment(book.date).month() === 9 &&
-                moment(book.date).date() === 31
-                  ? 'red'
-                  : 'transparent'
-            }}
-          >
-            <p>Name: {book.name}</p>
-            <p>Genre: {book.genre}</p>
-            <p>Published: {book.date}</p>
-            <div>
-              Author:
-              {book.author.firstName} {book.author.lastName}
-            </div>
-          </li>
-        ))}
+        <AutoSizer>
+          {({ height, width }) => (
+            <FixedSizeList
+              width={width}
+              height={height}
+              itemSize={200}
+              itemCount={books.length}
+            >
+              {Row}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
       </StyledList>
     </>
   );
