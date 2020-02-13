@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { CSSProperties } from 'styled-components';
 import moment from 'moment';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -12,7 +12,7 @@ type BookListProps = {
 
 type BookListItertor = {
   index: number;
-  style: string;
+  style: CSSProperties;
 };
 
 const StyledList = styled.ul`
@@ -38,7 +38,7 @@ const StyledList = styled.ul`
 `;
 
 const BookList = ({ books }: BookListProps) => {
-  const Row = ({ index, style }: { index: any; style: any }) => {
+  const Row = ({ index, style }: BookListItertor) => {
     return (
       <div style={style}>
         <li
